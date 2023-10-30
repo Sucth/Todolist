@@ -4,12 +4,12 @@ using ToDoList_delamort.Controller;
 
 namespace ToDoList_delamort.Views
 {
-    public class Controller
+    public class Terminal
     {
         private Dictionary<string, Action<string>> commandDictionary;
         private ControllerCommand controllerCommand;
 
-        public Controller()
+        public Terminal()
         {
             controllerCommand = new ControllerCommand();
             InitializeCommandDictionary();
@@ -30,12 +30,13 @@ namespace ToDoList_delamort.Views
             commandDictionary = new Dictionary<string, Action<string>>
             {
                 { "Add", command => controllerCommand.AddTask(command) },
-                //{ "Update", command => controllerCommand.UpdateTask(command) },
-                //{ "List", command => controllerCommand.ListTasks(command) },
-                //{ "Delete", command => controllerCommand.DeleteTask(command) },
-                //{ "DeletePriority", command => controllerCommand.DeletePriority(command) },
-                //{ "Complete", command => controllerCommand.CompleteTask(command) },
-                //{ "Filter", command => controllerCommand.FilterTasks(command) },
+                { "Update", command => controllerCommand.UpdateTask(command) },
+                { "List", command => controllerCommand.ListTasks(controllerCommand.GetTasks())},
+                { "Delete", command => controllerCommand.DeleteTask(command) },
+                { "Complete", command => controllerCommand.CompleteTask(command) },
+                { "Filter1", command => controllerCommand.GetPercentageCompleted() },
+                { "Filter2", command => controllerCommand.GetPercentageNotCompleted() },
+                { "Filter3", command => controllerCommand.GetPercentageByPriority() },
                 { "Help", command => DisplayGuide() },
                 { "Exit", command => Environment.Exit(0) }
             };

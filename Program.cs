@@ -4,5 +4,5 @@ using System.Linq;
 using System.Timers;
 using Microsoft.EntityFrameworkCore;
 
-var InstanceController = new Controller();
+var InstanceController = new Terminal();
 InstanceController.Run();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,6 +34,11 @@ namespace ToDoList_delamort.Views
                 Console.WriteLine($"Task ID: {task.Id}, Name: {task.Name}, Description: {task.Description}, Creation Date: {task.CreationDate}, Due Date: {task.DueDate:MM/dd/yyyy}, Priority: {task.Priority}, Status: {status}");
                 Console.WriteLine();
             }
+        }
+
+        internal static void DisplayTasks(DbSet<Task> tasks)
+        {
+            throw new NotImplementedException();
         }
     }
 

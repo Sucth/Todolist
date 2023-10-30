@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mpjbGmrqLllql5RntOL2wUDBPVAxPCrX1bSfiyCOFpnf1MuARTitDKIBc1O/rFmURppAZ1cJx+ThjvGmmW0A2A==",
+  "dgSpecHash": "JfLpSz41/WPfgi3VX27h9+fUswfBWESBRywdC7A89CRjNyXsNv3d+WUk93QYuacEMAhGA8/TAzqHCUT79K8RTA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\theos\\source\\repos\\ToDoList_delamort\\ToDoList_delamort.csproj",
+  "projectFilePath": "C:\\Users\\theos\\Desktop\\Todolist\\ToDoList_delamort.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\theos\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\theos\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
