@@ -8,10 +8,12 @@ namespace ToDoList_delamort.Views
     {
         private Dictionary<string, Action<string>> commandDictionary;
         private ControllerCommand controllerCommand;
+        private LogWriter logWriter;
 
         public Terminal()
         {
             controllerCommand = new ControllerCommand();
+            logWriter = new LogWriter("C:\\Users\\theos\\Desktop\\Todolist\\LogFilePath\\Todolist_log.log");
             InitializeCommandDictionary();
         }
 
@@ -21,6 +23,7 @@ namespace ToDoList_delamort.Views
             {
                 Console.WriteLine("=== Command Line ===");
                 string command = Console.ReadLine();
+                logWriter.LogAction(command);
                 ExecuteCommand(command);
             }
         }
@@ -34,9 +37,11 @@ namespace ToDoList_delamort.Views
                 { "List", command => controllerCommand.ListTasks(controllerCommand.GetTasks())},
                 { "Delete", command => controllerCommand.DeleteTask(command) },
                 { "Complete", command => controllerCommand.CompleteTask(command) },
-                { "Filter1", command => controllerCommand.GetPercentageCompleted() },
-                { "Filter2", command => controllerCommand.GetPercentageNotCompleted() },
-                { "Filter3", command => controllerCommand.GetPercentageByPriority() },
+                { "SortComplete", command => controllerCommand.GetPercentageCompleted() },
+                { "SorrtNotComplete", command => controllerCommand.GetPercentageNotCompleted() },
+                { "SortPriority", command => controllerCommand.GetPercentageByPriority() },
+                { "Log", command => logWriter.PrintLog() },
+                { "ZipLog", command => logWriter.ZipLogForDay() },
                 { "Help", command => DisplayGuide() },
                 { "Exit", command => Environment.Exit(0) }
             };
@@ -63,16 +68,17 @@ namespace ToDoList_delamort.Views
         {
             Console.WriteLine("Available commands:");
             Console.WriteLine("Add <TaskName> <Description> <Priority> <DueDate>");
-            Console.WriteLine("Update <TaskName> <Description> <NewPriority> <NewDueDate>");
-            Console.WriteLine("List");
-            Console.WriteLine("Delete <TaskName>");
-            Console.WriteLine("DeletePriority <Priority>");
+            Console.WriteLine("Update <Number> <TaskName> <Description> <NewPriority> <NewDueDate>");
+            Console.WriteLine("List Affiche la liste des tâches.");
+            Console.WriteLine("Delete <Number Of task>");
             Console.WriteLine("Complete <TaskName>");
-            Console.WriteLine("Filter Completed/Incomplete");
-            Console.WriteLine("Filter DueDate <Date>");
-            Console.WriteLine("Filter Priority <Priority>");
-            Console.WriteLine("Help");
-            Console.WriteLine("Exit");
+            Console.WriteLine("SortComplete Affiche le pourcentage de tâches complétées.");
+            Console.WriteLine("SortNotComplete Affiche le pourcentage de tâches non complétées.");
+            Console.WriteLine("SortPriority Affiche le pourcentage de tâches par priorité.");
+            Console.WriteLine("Log Affiche le journal.");
+            Console.WriteLine("ZipLog Compresse le journal d'une journée.");
+            Console.WriteLine("Help Affiche ce guide.");
+            Console.WriteLine("Exit Quitte l'application.");
         }
     }
 }

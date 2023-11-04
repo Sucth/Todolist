@@ -14,5 +14,4 @@ public class Task
     public DateTime DueDate { get; set; }
     public Priority Priority { get; set; }
     public bool IsCompleted { get; set; }
-    public DateTime? ReminderTime { get; set; }
 }

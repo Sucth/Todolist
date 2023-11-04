@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using ToDoList_delamort.Model;
 using ToDoList_delamort.Views;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Timers;
+
 //Update 1 test2 test2 31/12/2023 Medium
 namespace ToDoList_delamort.Controller
 {
     public class ControllerCommand
     {
-        private ToDolistContext _db = InitDb.GetDb();
         public void AddTask(string command)
         {
             string[] commandSplitted = command.Split(' ');
@@ -49,9 +50,12 @@ namespace ToDoList_delamort.Controller
                         Priority = priorityTask,
                         IsCompleted = false
                     };
-                    if (string.IsNullOrWhiteSpace(task.Description))
+                    if (string.IsNullOrWhiteSpace(descriptionTask))
                     {
-                        task.ReminderTime = DateTime.Now.AddMinutes(1);
+                        var timer = new System.Timers.Timer(60000);
+                        timer.Elapsed += TimerElapsedAdd;
+                        timer.AutoReset = false;
+                        timer.Start();
                     }
                     _db.Tasks.Add(task);
                     _db.SaveChanges();
@@ -99,18 +103,25 @@ namespace ToDoList_delamort.Controller
 
             try
             {
-                var task = _db.Tasks.FirstOrDefault(t => t.Id == taskId);
+                
                 using (var _db = new ToDolistContext())
                 {
+                    var task = _db.Tasks.FirstOrDefault(t => t.Id == taskId);
                     if (task != null)
                     {
                         task.Name = nameCommand;
                         task.DueDate = dateTask;
                         task.Description = descriptionTask;
                         task.Priority = priorityTask;
-                        task.ReminderTime = string.IsNullOrWhiteSpace(descriptionTask) ? DateTime.Now.AddMinutes(1) : null;
                         _db.SaveChanges();
                         Console.WriteLine("Task updated!");
+                    }
+                    if (string.IsNullOrWhiteSpace(descriptionTask))
+                    {
+                        var timer = new System.Timers.Timer(60000);
+                        timer.Elapsed += TimerElapsedUpdate;
+                        timer.AutoReset = false;
+                        timer.Start();
                     }
                     else
                     {
@@ -134,9 +145,9 @@ namespace ToDoList_delamort.Controller
 
             try
             {
-                var task = _db.Tasks.FirstOrDefault(t => t.Id == taskId);
                 using (var _db = new ToDolistContext())
                 {
+                    var task = _db.Tasks.FirstOrDefault(t => t.Id == taskId);
                     if (task != null)
                     {
                         _db.Tasks.Remove(task);
@@ -179,17 +190,20 @@ namespace ToDoList_delamort.Controller
 
             try
             {
-                var task = _db.Tasks.FirstOrDefault(t => t.Id == taskId);
+                using (var _db = new ToDolistContext())
+                {
+                    var task = _db.Tasks.FirstOrDefault(t => t.Id == taskId);
 
-                if (task != null)
-                {
-                    task.IsCompleted = true;
-                    _db.SaveChanges();
-                    Console.WriteLine("Task marked as completed!");
-                }
-                else
-                {
-                    Console.WriteLine("Task not found.");
+                    if (task != null)
+                    {
+                        task.IsCompleted = true;
+                        _db.SaveChanges();
+                        Console.WriteLine("Task marked as completed!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Task not found.");
+                    }
                 }
             }
             catch (Exception ex)
@@ -241,5 +255,15 @@ namespace ToDoList_delamort.Controller
                 Console.WriteLine($"Pourcentage de tâches à haute priorité : {percentageHigh}%");
             }
         }
+
+        private static void TimerElapsedAdd(object sender, ElapsedEventArgs e)
+        {
+            Console.WriteLine($"Rappel : Veuillez ajouter une description pour un de vos tache.");
+        }
+        private static void TimerElapsedUpdate(object sender, ElapsedEventArgs e)
+        {
+            Console.WriteLine($"Rappel : Vous avez modifier une de vos tache ssans mettre de description.");
+        }
+
     }
 }
