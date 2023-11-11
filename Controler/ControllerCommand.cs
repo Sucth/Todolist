@@ -14,6 +14,11 @@ namespace ToDoList_delamort.Controller
 {
     public class ControllerCommand
     {
+        /// <summary>
+        /// Adds a new task to the database with the specified details, including user assignment.
+        /// <param name="command">The command string containing user name, task name, description, due date, and priority.</param>
+        /// </summary>
+
         public void AddTask(string command)
         {
             string[] commandSplitted = command.Split(' ');
@@ -85,7 +90,10 @@ namespace ToDoList_delamort.Controller
                 }
             }
         }
-
+        /// <summary>
+        /// Updates an existing task in the database with the specified details.
+        /// <param name="command">The command string containing task ID, new name, description, due date, and priority.</param>
+        /// </summary>
 
         public void UpdateTask(string command)
         {
@@ -152,6 +160,10 @@ namespace ToDoList_delamort.Controller
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
+        /// <summary>
+        /// Deletes a task from the database using the specified task ID.
+        /// <param name="command">The task ID to be deleted.</param>
+        /// </summary>
 
         public void DeleteTask(string command)
         {
@@ -183,13 +195,19 @@ namespace ToDoList_delamort.Controller
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
+        /// <summary>
+        /// Lists all tasks in the database.
+        /// </summary>
 
         public void ListTasks()
         {
             List<Task> tasks = GetTasks();
             DisplayTasksView.DisplayTasks(tasks);
         }
-
+        /// <summary>
+        /// Retrieves a list of all tasks from the database.
+        /// </summary>
+        /// <returns>List of tasks.</returns>
 
         public List<Task> GetTasks()
         {
@@ -198,7 +216,10 @@ namespace ToDoList_delamort.Controller
                 return _db.GetTasksWithUsers();
             }
         }
-
+        /// <summary>
+        /// Retrieves a list of all tasks with associated users from the database.
+        /// </summary>
+        /// <returns>List of tasks with users.</returns>
 
         public List<Task> GetTasksWithUsers()
         {
@@ -207,8 +228,10 @@ namespace ToDoList_delamort.Controller
                 return _db.Tasks.Include(t => t.TaskUsers).ThenInclude(tu => tu.User).ToList();
             }
         }
-
-
+        /// <summary>
+        /// Marks a task as completed in the database using the specified task ID.
+        /// <param name="command">The task ID to be marked as completed.</param>
+        /// </summary>
 
         public void CompleteTask(string command)
         {
@@ -241,6 +264,9 @@ namespace ToDoList_delamort.Controller
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
+        /// <summary>
+        /// Calculates and displays the percentage of completed tasks in the database.
+        /// </summary>
 
         public void GetPercentageCompleted()
         {
@@ -254,6 +280,9 @@ namespace ToDoList_delamort.Controller
                 Console.WriteLine($"Pourcentage de tâches complétées : {percentage}%");
             }
         }
+        /// <summary>
+        /// Calculates and displays the percentage of non-completed tasks in the database.
+        /// </summary>
 
         public void GetPercentageNotCompleted()
         {
@@ -266,6 +295,9 @@ namespace ToDoList_delamort.Controller
                 Console.WriteLine($"Pourcentage de tâches non complétées : {percentage}%");
             }
         }
+        /// <summary>
+        /// Calculates and displays the percentage of tasks by priority in the database.
+        /// </summary>
 
         public void GetPercentageByPriority()
         {
@@ -285,108 +317,21 @@ namespace ToDoList_delamort.Controller
                 Console.WriteLine($"Pourcentage de tâches à haute priorité : {percentageHigh}%");
             }
         }
+        /// <summary>
+        /// Timer elapsed event handler for reminding the user to add a description to a task.
+        /// </summary>
 
         private static void TimerElapsedAdd(object sender, ElapsedEventArgs e)
         {
             Console.WriteLine($"Rappel : Veuillez ajouter une description pour un de vos tache.");
         }
+        /// <summary>
+        /// Timer elapsed event handler for reminding the user to add a description when updating a task.
+        /// </summary>
+
         private static void TimerElapsedUpdate(object sender, ElapsedEventArgs e)
         {
             Console.WriteLine($"Rappel : Vous avez modifier une de vos tache ssans mettre de description.");
-        }
-
-
-
-        public void CreateUser(string name)
-        {
-            try
-            {
-                using (var _db = new ToDolistContext())
-                {
-                    var user = new User
-                    {
-                        Name = name
-                    };
-
-                    _db.Users.Add(user);
-                    _db.SaveChanges();
-
-                    Console.WriteLine("Utilisateur créé avec succès !");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur : " + ex.Message);
-            }
-        }
-
-        public void DeleteUser(int userId)
-        {
-            try
-            {
-                using (var _db = new ToDolistContext())
-                {
-                    var user = _db.Users.Find(userId);
-                    if (user != null)
-                    {
-                        _db.Users.Remove(user);
-                        _db.SaveChanges();
-                        Console.WriteLine("Utilisateur supprimé avec succès !");
-                    }
-                    else
-                    {
-                        Console.WriteLine("L'utilisateur avec l'ID spécifié n'a pas été trouvé.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur : " + ex.Message);
-            }
-        }
-
-        public void RemoveUserFromTask(int userId, int taskId)
-        {
-            try
-            {
-                using (var _db = new ToDolistContext())
-                {
-                    var taskUser = _db.TaskUsers
-                        .FirstOrDefault(tu => tu.UserId == userId && tu.TaskId == taskId);
-
-                    if (taskUser != null)
-                    {
-                        _db.TaskUsers.Remove(taskUser);
-                        _db.SaveChanges();
-                        Console.WriteLine("Lien entre l'utilisateur et la tâche supprimé avec succès !");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Le lien entre l'utilisateur et la tâche n'a pas été trouvé.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur : " + ex.Message);
-            }
-        }
-
-
-        public static List<User> GetAllUsers()
-        {
-            try
-            {
-                using (var _db = new ToDolistContext())
-                {
-                    return _db.Users.ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur : " + ex.Message);
-                return null;
-            }
         }
     }
 }

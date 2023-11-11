@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToDoList_delamort.Controler;
 using ToDoList_delamort.Controller;
 
 namespace ToDoList_delamort.Views
@@ -8,11 +9,13 @@ namespace ToDoList_delamort.Views
     {
         private Dictionary<string, Action<string>> commandDictionary;
         private ControllerCommand controllerCommand;
+        private userController userController;
         private LogWriter logWriter;
 
         public Terminal()
         {
             controllerCommand = new ControllerCommand();
+            userController = new userController();
             logWriter = new LogWriter("C:\\Users\\theos\\Desktop\\Todolist\\LogFilePath\\Todolist_log.log");
             InitializeCommandDictionary();
         }
@@ -41,10 +44,14 @@ namespace ToDoList_delamort.Views
                 { "Delete", command => controllerCommand.DeleteTask(command) },
                 { "Complete", command => controllerCommand.CompleteTask(command) },
                 { "SortComplete", command => controllerCommand.GetPercentageCompleted() },
-                { "SorrtNotComplete", command => controllerCommand.GetPercentageNotCompleted() },
+                { "SortNotComplete", command => controllerCommand.GetPercentageNotCompleted() },
                 { "SortPriority", command => controllerCommand.GetPercentageByPriority() },
-                { "Listuser", command => DisplayTasksView.Displayuser() },
-                { "AddUser", command => controllerCommand.CreateUser(command)},
+                { "ListUser", command => DisplayTasksView.Displayuser() },
+                { "AddUser", command => userController.CreateUser(command)},
+                { "DeleteUser", command => userController.DeleteUser(command)},
+                { "AllUserTask", command => userController.GetTasksByUser(command)},
+                { "AllTaskUser", command => userController.GetUsersByTask(command)},
+                { "NoTaskUser", command => userController.GetUsersWithoutTasks()},
                 { "Log", command => logWriter.PrintLog() },
                 { "ZipLog", command => logWriter.ZipLogForDay() },
                 { "Help", command => DisplayGuide() },
