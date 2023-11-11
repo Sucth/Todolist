@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ToDoList_delamort.Model;
 
+
 public class Task
 {
     public int Id { get; set; }
@@ -14,4 +15,5 @@ public class Task
     public DateTime DueDate { get; set; }
     public Priority Priority { get; set; }
     public bool IsCompleted { get; set; }
+    public List<TaskUser> TaskUsers { get; set; }
 }

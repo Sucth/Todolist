@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controler"
+    "\\Controler",
+    "\\Model",
+    "\\Views"
   ],
-  "SelectedNode": "\\Controler\\ControllerCommand.cs",
+  "SelectedNode": "\\ToDoList_delamort.sln",
   "PreviewInSolutionExplorer": false
 }

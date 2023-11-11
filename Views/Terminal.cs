@@ -21,6 +21,9 @@ namespace ToDoList_delamort.Views
         {
             while (true)
             {
+                //int userIdToRemove = 1; 
+                //int taskIdToRemove = 5;
+                //controllerCommand.RemoveUserFromTask(userIdToRemove, taskIdToRemove);
                 Console.WriteLine("=== Command Line ===");
                 string command = Console.ReadLine();
                 logWriter.LogAction(command);
@@ -34,12 +37,14 @@ namespace ToDoList_delamort.Views
             {
                 { "Add", command => controllerCommand.AddTask(command) },
                 { "Update", command => controllerCommand.UpdateTask(command) },
-                { "List", command => controllerCommand.ListTasks(controllerCommand.GetTasks())},
+                { "List", command => controllerCommand.ListTasks()},
                 { "Delete", command => controllerCommand.DeleteTask(command) },
                 { "Complete", command => controllerCommand.CompleteTask(command) },
                 { "SortComplete", command => controllerCommand.GetPercentageCompleted() },
                 { "SorrtNotComplete", command => controllerCommand.GetPercentageNotCompleted() },
                 { "SortPriority", command => controllerCommand.GetPercentageByPriority() },
+                { "Listuser", command => DisplayTasksView.Displayuser() },
+                { "AddUser", command => controllerCommand.CreateUser(command)},
                 { "Log", command => logWriter.PrintLog() },
                 { "ZipLog", command => logWriter.ZipLogForDay() },
                 { "Help", command => DisplayGuide() },
@@ -67,11 +72,11 @@ namespace ToDoList_delamort.Views
         private void DisplayGuide()
         {
             Console.WriteLine("Available commands:");
-            Console.WriteLine("Add <TaskName> <Description> <Priority> <DueDate>");
-            Console.WriteLine("Update <Number> <TaskName> <Description> <NewPriority> <NewDueDate>");
+            Console.WriteLine("Add <Task Name> <Description> <Priority> <End Task Date>");
+            Console.WriteLine("Update <Number> <Task Name> <Description> <New Priority> <New DueDate>");
             Console.WriteLine("List Affiche la liste des tâches.");
             Console.WriteLine("Delete <Number Of task>");
-            Console.WriteLine("Complete <TaskName>");
+            Console.WriteLine("Complete <Task Name>");
             Console.WriteLine("SortComplete Affiche le pourcentage de tâches complétées.");
             Console.WriteLine("SortNotComplete Affiche le pourcentage de tâches non complétées.");
             Console.WriteLine("SortPriority Affiche le pourcentage de tâches par priorité.");

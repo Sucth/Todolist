@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ToDoList_delamort.Controller;
 
 namespace ToDoList_delamort.Views
 {
@@ -22,8 +23,23 @@ namespace ToDoList_delamort.Views
 
         public static void DisplayTaskDetails(Task task, string status)
         {
-            Console.WriteLine($"Task ID: {task.Id}, Name: {task.Name}, Description: {task.Description}, Creation Date: {task.CreationDate}, Due Date: {task.DueDate:MM/dd/yyyy}, Priority: {task.Priority}, Status: {status}");
+            Console.Write($"Task ID: {task.Id}, Users: ");
+
+            if (task.TaskUsers != null && task.TaskUsers.Any())
+            {
+                foreach (var taskUser in task.TaskUsers)
+                {
+                    Console.Write($"{taskUser.User?.Name}, ");
+                }
+            }
+            else
+            {
+                Console.Write("N/A");
+            }
+
+            Console.WriteLine($"\nName: {task.Name}, Description: {task.Description}, Creation Date: {task.CreationDate}, Due Date: {task.DueDate:MM/dd/yyyy}, Priority: {task.Priority}, Status: {status}");
         }
+
 
         public static void DisplaySortedTasks(List<Task> tasks)
         {
@@ -39,6 +55,19 @@ namespace ToDoList_delamort.Views
         internal static void DisplayTasks(DbSet<Task> tasks)
         {
             throw new NotImplementedException();
+        }
+
+        public static void Displayuser()
+        {
+            List<User> allUsers = ControllerCommand.GetAllUsers();
+
+            if (allUsers != null)
+            {
+                foreach (var user in allUsers)
+                {
+                    Console.WriteLine($"ID: {user.Id}, Name: {user.Name}");
+                }
+            }
         }
     }
 

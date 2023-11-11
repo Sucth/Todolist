@@ -8,8 +8,8 @@ using ToDoList_delamort.Model;
 using ToDoList_delamort.Views;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Timers;
+using Microsoft.EntityFrameworkCore;
 
-//Update 1 test2 test2 31/12/2023 Medium
 namespace ToDoList_delamort.Controller
 {
     public class ControllerCommand
@@ -18,20 +18,21 @@ namespace ToDoList_delamort.Controller
         {
             string[] commandSplitted = command.Split(' ');
 
-            if (commandSplitted.Length < 4)
+            if (commandSplitted.Length < 5)
             {
-                Console.WriteLine("Invalid command format. Use: name description date priority");
+                Console.WriteLine("Invalid command format. Use: username name description date priority");
                 return;
             }
 
-            string nameCommand = commandSplitted[0];
-            string descriptionTask = commandSplitted[1];
-            if (!DateTime.TryParse(commandSplitted[2], out DateTime dateTask))
+            string username = commandSplitted[0];
+            string nameCommand = commandSplitted[1];
+            string descriptionTask = commandSplitted[2];
+            if (!DateTime.TryParse(commandSplitted[3], out DateTime dateTask))
             {
-                Console.WriteLine("Invalid date format. Use a valid date format, e.g., 'yyyy-MM-dd HH:mm:ss'.");
+                Console.WriteLine("Invalid date format. Use a valid date format, e.g., 'yyyy-MM-dd'.");
                 return;
             }
-            if (!Enum.TryParse(commandSplitted[3], true, out Priority priorityTask))
+            if (!Enum.TryParse(commandSplitted[4], true, out Priority priorityTask))
             {
                 Console.WriteLine("Invalid priority. Use a valid priority value.");
                 return;
@@ -41,6 +42,14 @@ namespace ToDoList_delamort.Controller
             {
                 using (var _db = new ToDolistContext())
                 {
+                    var user = _db.Users.FirstOrDefault(u => u.Name == username);
+
+                    if (user == null)
+                    {
+                        Console.WriteLine($"L'utilisateur avec le nom {username} n'existe pas.");
+                        return;
+                    }
+
                     var task = new Task
                     {
                         Name = nameCommand,
@@ -48,7 +57,8 @@ namespace ToDoList_delamort.Controller
                         DueDate = dateTask,
                         Description = descriptionTask,
                         Priority = priorityTask,
-                        IsCompleted = false
+                        IsCompleted = false,
+                        TaskUsers = new List<TaskUser> { new TaskUser { User = user } }
                     };
                     if (string.IsNullOrWhiteSpace(descriptionTask))
                     {
@@ -65,9 +75,17 @@ namespace ToDoList_delamort.Controller
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erreur : " + ex.Message);
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine("Erreur : " + ex.InnerException.Message);
+                }
+                else
+                {
+                    Console.WriteLine("Erreur : " + ex.Message);
+                }
             }
         }
+
 
         public void UpdateTask(string command)
         {
@@ -166,18 +184,30 @@ namespace ToDoList_delamort.Controller
             }
         }
 
-        public void ListTasks(List<Task> tasks)
+        public void ListTasks()
         {
+            List<Task> tasks = GetTasks();
             DisplayTasksView.DisplayTasks(tasks);
         }
+
 
         public List<Task> GetTasks()
         {
             using (var _db = new ToDolistContext())
             {
-                return _db.Tasks.ToList();
+                return _db.GetTasksWithUsers();
             }
         }
+
+
+        public List<Task> GetTasksWithUsers()
+        {
+            using (var _db = new ToDolistContext())
+            {
+                return _db.Tasks.Include(t => t.TaskUsers).ThenInclude(tu => tu.User).ToList();
+            }
+        }
+
 
 
         public void CompleteTask(string command)
@@ -265,5 +295,98 @@ namespace ToDoList_delamort.Controller
             Console.WriteLine($"Rappel : Vous avez modifier une de vos tache ssans mettre de description.");
         }
 
+
+
+        public void CreateUser(string name)
+        {
+            try
+            {
+                using (var _db = new ToDolistContext())
+                {
+                    var user = new User
+                    {
+                        Name = name
+                    };
+
+                    _db.Users.Add(user);
+                    _db.SaveChanges();
+
+                    Console.WriteLine("Utilisateur créé avec succès !");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+            }
+        }
+
+        public void DeleteUser(int userId)
+        {
+            try
+            {
+                using (var _db = new ToDolistContext())
+                {
+                    var user = _db.Users.Find(userId);
+                    if (user != null)
+                    {
+                        _db.Users.Remove(user);
+                        _db.SaveChanges();
+                        Console.WriteLine("Utilisateur supprimé avec succès !");
+                    }
+                    else
+                    {
+                        Console.WriteLine("L'utilisateur avec l'ID spécifié n'a pas été trouvé.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+            }
+        }
+
+        public void RemoveUserFromTask(int userId, int taskId)
+        {
+            try
+            {
+                using (var _db = new ToDolistContext())
+                {
+                    var taskUser = _db.TaskUsers
+                        .FirstOrDefault(tu => tu.UserId == userId && tu.TaskId == taskId);
+
+                    if (taskUser != null)
+                    {
+                        _db.TaskUsers.Remove(taskUser);
+                        _db.SaveChanges();
+                        Console.WriteLine("Lien entre l'utilisateur et la tâche supprimé avec succès !");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Le lien entre l'utilisateur et la tâche n'a pas été trouvé.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+            }
+        }
+
+
+        public static List<User> GetAllUsers()
+        {
+            try
+            {
+                using (var _db = new ToDolistContext())
+                {
+                    return _db.Users.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur : " + ex.Message);
+                return null;
+            }
+        }
     }
 }
