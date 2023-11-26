@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "mpjbGmrqLllql5RntOL2wUDBPVAxPCrX1bSfiyCOFpnf1MuARTitDKIBc1O/rFmURppAZ1cJx+ThjvGmmW0A2A==",
+  "dgSpecHash": "/oRO432FwP/zWhcnnFV7DHC7qp3nONrg1WmCCHhFWzFPHYo8+Ks6lpSa+VjIeJbMadaj9RRXyLfyat7Btj0/9w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\theos\\source\\repos\\ToDoList_delamort\\ToDoList_delamort.csproj",
+  "projectFilePath": "C:\\Users\\theos\\Desktop\\Todolist\\ToDoList_delamort.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\theos\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\theos\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\theos\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512",
     "C:\\Users\\theos\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\theos\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\theos\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
